@@ -7,6 +7,7 @@ const vex::controller::button &intake_button = con.ButtonL1;
 const vex::controller::button &outtake_button = con.ButtonL2;
 const vex::controller::button &goal_grabber = con.ButtonUp;
 const vex::controller::button &ring_doinker = con.ButtonLeft;
+const vex::controller::button &conveyor_button = con.ButtonR2;
 
 /**
  * Main entrypoint for the driver control period
@@ -29,6 +30,10 @@ void opcontrol()
         intake_ramp.spin(vex::directionType::rev, 10, vex::volt);
     });
 
+    conveyor_button.pressed([]() {
+        conveyor.spin(vex::directionType::fwd, 10, vex::volt);
+    });
+
     goal_grabber.pressed([]() {
         goal_grabber_sol.set(!goal_grabber_sol);
     });
@@ -41,6 +46,10 @@ void opcontrol()
         if(!intake_button.pressing() && !outtake_button.pressing()) {
             intake_roller.stop();
             intake_ramp.stop();
+        }
+
+        if(!conveyor_button.pressing()) {
+            conveyor.stop();
         }
 
         double straight = (double)con.Axis3.position() / 100;
