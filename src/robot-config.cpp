@@ -9,12 +9,12 @@ vex::triport expander(vex::PORT18);
 
 // Analog sensors
 CustomEncoder left_enc{expander.A, 2048};
-CustomEncoder right_enc{expander.B, 2048};
-CustomEncoder rear_enc{expander.C, 2048};
+CustomEncoder right_enc{expander.C, 2048};
+CustomEncoder rear_enc{expander.E, 2048};
 
-tracking_wheel_cfg_t left_enc_cfg{};
-tracking_wheel_cfg_t right_enc_cfg{};
-tracking_wheel_cfg_t rear_enc_cfg{};
+tracking_wheel_cfg_t left_enc_cfg{-0.0625, 3.625, 0, 1.0625};
+tracking_wheel_cfg_t right_enc_cfg{-0.0625, -3.625, M_PI, 1.0625};
+tracking_wheel_cfg_t rear_enc_cfg{4.5, -0.375, (M_PI/2), 1.0625};
 
 // ================ OUTPUTS ================
 // Motors
