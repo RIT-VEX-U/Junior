@@ -39,5 +39,7 @@ INC_F  = include
 # build targets
 all: $(BUILD)/$(PROJECT).bin
 
+INC += -Ivendor/eigen
+
 # include build rules
 include vex/mkrules.mk
