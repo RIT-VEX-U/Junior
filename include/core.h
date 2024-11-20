@@ -1,6 +1,7 @@
 #pragma once
 
 // Subsystems package
+#include "../core/include/subsystems/odometry/odometry_nwheel.h"
 #include "../core/include/subsystems/odometry/odometry_3wheel.h"
 #include "../core/include/subsystems/odometry/odometry_base.h"
 #include "../core/include/subsystems/odometry/odometry_tank.h"
