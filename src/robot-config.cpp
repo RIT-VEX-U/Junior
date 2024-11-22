@@ -32,6 +32,28 @@ vex::motor intake_roller(vex::PORT19, vex::gearSetting::ratio6_1, false);
 vex::motor intake_ramp(vex::PORT20, vex::gearSetting::ratio6_1, false);
 vex::motor conveyor(vex::PORT9, vex::gearSetting::ratio6_1, false);
 
+const double intake_volts = 12.0;
+
+void intake(double volts) {
+    intake_roller.spin(vex::directionType::fwd, volts, vex::volt);
+    intake_ramp.spin(vex::directionType::fwd, volts, vex::volt);
+}
+
+void intake() {
+    intake_roller.spin(vex::directionType::fwd, intake_volts, vex::volt);
+    intake_ramp.spin(vex::directionType::fwd, intake_volts, vex::volt);
+}
+
+void outtake(double volts) {
+    intake_roller.spin(vex::directionType::rev, volts, vex::volt);
+    intake_ramp.spin(vex::directionType::rev, volts, vex::volt);
+}
+
+void outtake() {
+    intake_roller.spin(vex::directionType::rev, intake_volts, vex::volt);
+    intake_ramp.spin(vex::directionType::rev, intake_volts, vex::volt);
+}
+
 vex::motor_group left_motors{left_front_top, left_front_bottom, left_back_top, left_back_bottom};
 vex::motor_group right_motors{right_front_top, right_front_bottom, right_back_top, right_back_bottom};
 // Pneumatics
@@ -51,7 +73,7 @@ PID::pid_config_t drive_pid_cfg{
 PID drive_pid{drive_pid_cfg};
 
 PID::pid_config_t turn_pid_cfg{
-    .p = 0,
+    .p = 0.05,
     .i = 0,
     .d = 0,
     .deadband = 0,
@@ -83,4 +105,15 @@ TankDrive drive_sys(left_motors, right_motors, robot_cfg, &odom);
 void robot_init()
 {
     imu.startCalibration();
+
+    conveyor_optical.setLight(vex::ledState::on);
+    conveyor_optical.setLightPower(100, vex::percent);
+
+    screen::start_screen(
+        Brain.Screen,
+        {
+            new screen::PIDPage(turn_pid, "turn")
+        },
+        0
+    );
 }

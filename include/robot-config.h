@@ -30,6 +30,11 @@ extern vex::motor intake_roller;
 extern vex::motor intake_ramp;
 extern vex::motor conveyor;
 
+void intake(double volts);
+void intake();
+void outtake(double volts);
+void outtake();
+
 extern vex::motor_group left_motors;
 extern vex::motor_group right_motors;
 // Pneumatics
