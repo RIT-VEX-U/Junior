@@ -2,7 +2,6 @@
 #include "vex.h"
 #include "robot-config.h"
 
-
 const vex::controller::button &intake_button = con.ButtonL1;
 const vex::controller::button &outtake_button = con.ButtonL2;
 const vex::controller::button &goal_grabber = con.ButtonRight;
@@ -16,7 +15,7 @@ void testing();
 */
 void opcontrol()
 {
-    // testing();
+    testing();
     // ================ INIT ================
     while (imu.isCalibrating()) {
         vexDelay(1);
@@ -83,6 +82,9 @@ void testing() {
                 drive_sys.drive_arcade(f, s, 1, TankDrive::BrakeType::None);
                 pose_t pos = odom.get_position();
                 printf("ODO X: %.2f, Y: %.2f, R:%.2f\n", pos.x, pos.y, pos.rot);
+                // printf(", Left encoder: %.2f", left_enc.position(vex::rotationUnits::deg));
+                // printf(", Right encoder: %.2f", right_enc.position(vex::rotationUnits::deg));
+                // printf(", Back encoder: %.2f\n", rear_enc.position(vex::rotationUnits::deg));
                 vexDelay(100);
             }
             return false;
@@ -92,9 +94,19 @@ void testing() {
     con.ButtonA.pressed([]() {
         CommandController cc{
             odom.SetPositionCmd({.x=0,.y=0,.rot=0}),
-            // drive_sys.DriveForwardCmd(48.0, vex::fwd, 0.6),
-            drive_sys.TurnToHeadingCmd(180, 0.6)->withTimeout(5),
+            drive_sys.DriveForwardCmd(48.0, vex::fwd, 0.6)->withTimeout(3),
+            // drive_sys.TurnToHeadingCmd(180, 0.6)->withTimeout(5),
             new DebugCommand(),
+        };
+        cc.run();
+    });
+
+    con.ButtonB.pressed([]() {
+        CommandController cc{
+            odom.SetPositionCmd({.x=0,.y=0,.rot=0}),
+            drive_sys.DriveToPointCmd({96, 0}, vex::fwd, 0.6)->withTimeout(3),
+            drive_sys.TurnToHeadingCmd(90, 0.6)->withTimeout(1),
+            drive_sys.DriveToPointCmd({48, 96}, vex::fwd, 0.6)->withTimeout(3),
         };
         cc.run();
     });

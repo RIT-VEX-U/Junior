@@ -8,9 +8,9 @@ vex::optical conveyor_optical(vex::PORT17);
 vex::triport expander(vex::PORT18);
 
 // Analog sensors
-CustomEncoder left_enc{expander.A, 2048};
-CustomEncoder right_enc{expander.C, 2048};
-CustomEncoder rear_enc{expander.E, 2048};
+CustomEncoder left_enc{Brain.ThreeWirePort.E, 2048};
+CustomEncoder right_enc{Brain.ThreeWirePort.C, 2048};
+CustomEncoder rear_enc{Brain.ThreeWirePort.G, 2048};
 
 tracking_wheel_cfg_t left_enc_cfg{-0.0625, 3.625, 0, 1.0625};
 tracking_wheel_cfg_t right_enc_cfg{-0.0625, -3.625, M_PI, 1.0625};
@@ -63,32 +63,50 @@ vex::digital_out ring_pusher_sol{Brain.ThreeWirePort.B};
 // ================ SUBSYSTEMS ================
 
 PID::pid_config_t drive_pid_cfg{
-    .p = 0,
-    .i = 0,
-    .d = 0,
-    .deadband = 0,
-    .on_target_time = 0,
+    .p = 0.3,
+    .i = 0.01,
+    .d = 0.00815,
+    .deadband = 3.0,
+    .on_target_time = 0.1,
 };
 
 PID drive_pid{drive_pid_cfg};
 
 PID::pid_config_t turn_pid_cfg{
-    .p = 0.05,
-    .i = 0,
-    .d = 0,
-    .deadband = 0,
-    .on_target_time = 0,
+    .p = 0.0149,
+    .i = 0.0,
+    .d = 0.001,
+    .deadband = 0.5,
+    .on_target_time = 0.1,
 };
 
 PID turn_pid{turn_pid_cfg};
 
-PID::pid_config_t drive_correction_pid{};
+PID::pid_config_t drive_correction_pid{
+    // .p = 0.083,
+    // .i = 0.01,
+    // .d = 0.03,
+    // .deadband = 0.5,
+    // .on_target_time = 0.1,
+};
+
+// robot_specs_t robot_cfg{
+//     .robot_radius = 12.0,
+//     .odom_wheel_diam = 2.0,
+//     .odom_gear_ratio = 1.0,
+//     .dist_between_wheels = 11.0,
+
+//     // .drive_correction_cutoff = 0,
+//     .drive_feedback = &drive_pid,
+//     .turn_feedback = &turn_pid,
+//     .correction_pid = drive_correction_pid,
+// };
 
 robot_specs_t robot_cfg{
     .robot_radius = 12.0,
-    .odom_wheel_diam = 2.0,
-    .odom_gear_ratio = 1.0,
-    .dist_between_wheels = 11.0,
+    .odom_wheel_diam = 3.0,
+    .odom_gear_ratio = 4.0/3.0,
+    .dist_between_wheels = 11.5,
 
     // .drive_correction_cutoff = 0,
     .drive_feedback = &drive_pid,
@@ -96,7 +114,8 @@ robot_specs_t robot_cfg{
     .correction_pid = drive_correction_pid,
 };
 
-OdometryNWheel<3> odom({left_enc, right_enc, rear_enc}, {left_enc_cfg, right_enc_cfg, rear_enc_cfg}, &imu, true);
+// OdometryNWheel<2> odom({left_enc, rear_enc}, {left_enc_cfg, rear_enc_cfg}, &imu, true);
+OdometryTank odom(left_motors, right_motors, robot_cfg, &imu);
 TankDrive drive_sys(left_motors, right_motors, robot_cfg, &odom);
 
 /**
