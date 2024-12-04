@@ -96,8 +96,8 @@ robot_specs_t robot_cfg{
     .correction_pid = drive_correction_pid,
 };
 
-// OdometryNWheel<3> odom({left_enc, right_enc, front_enc}, {left_enc_cfg, right_enc_cfg, front_enc_cfg}, &imu, true);
-OdometryTank odom(left_enc, right_enc, robot_cfg, &imu);
+OdometryNWheel<3> odom({left_enc, right_enc, front_enc}, {left_enc_cfg, right_enc_cfg, front_enc_cfg}, &imu, true);
+// OdometryTank odom(left_enc, right_enc, robot_cfg, &imu);
 TankDrive drive_sys(left_motors, right_motors, robot_cfg, &odom);
 
 /**

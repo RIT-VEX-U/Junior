@@ -49,8 +49,8 @@ extern PID::pid_config_t drive_correction_pid;
 
 extern robot_specs_t robot_cfg;
 
-// extern OdometryNWheel<3> odom;
-extern OdometryTank odom;
+extern OdometryNWheel<3> odom;
+// extern OdometryTank odom;
 extern TankDrive drive_sys;
 
 /**
