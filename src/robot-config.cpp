@@ -12,9 +12,9 @@ CustomEncoder left_enc{Brain.ThreeWirePort.C, 2048};
 CustomEncoder right_enc{Brain.ThreeWirePort.E, 2048};
 CustomEncoder front_enc{Brain.ThreeWirePort.G, 2048};
 
-tracking_wheel_cfg_t left_enc_cfg{-0.0625, 3.625, 0, 0.9};
-tracking_wheel_cfg_t right_enc_cfg{-0.0625, -3.625, M_PI, 0.9};
-tracking_wheel_cfg_t front_enc_cfg{4.5, -0.375, (3 * M_PI/2), 0.9};
+tracking_wheel_cfg_t left_enc_cfg{-0.0625, 3.625, M_PI, 1.0625};
+tracking_wheel_cfg_t right_enc_cfg{-0.0625, -3.625, 0, 1.0625};
+tracking_wheel_cfg_t front_enc_cfg{4.5, -0.375, (M_PI/2), 1.0625};
 
 // ================ OUTPUTS ================
 // Motors

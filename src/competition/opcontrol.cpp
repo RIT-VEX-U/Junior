@@ -32,6 +32,7 @@ void opcontrol()
 
     conveyor_button.pressed([]() {
         conveyor.spin(vex::directionType::fwd, 12, vex::volt);
+        intake();
     });
 
     rev_conveyor_button.pressed([]() {
@@ -47,7 +48,7 @@ void opcontrol()
     });
 
     while (true) {
-        if(!intake_button.pressing() && !outtake_button.pressing()) {
+        if(!intake_button.pressing() && !outtake_button.pressing() && !conveyor_button.pressing()) {
             intake_roller.stop();
             intake_ramp.stop();
         }
