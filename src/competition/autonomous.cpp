@@ -37,6 +37,20 @@ AutoCommand *stop_intake() {
 	});
 }
 
+AutoCommand *conveyor_intake_command(double amt = 12.0) {
+	return new FunctionCommand([=]() {
+		conveyor_intake(amt);
+		return true;
+	});
+}
+
+AutoCommand *conveyor_stop_command() {
+	return new FunctionCommand([=]() {
+		conveyor_intake(0);
+		return true;
+	});
+}
+
 AutoCommand *goal_grabber_command(bool value) {
 	return new FunctionCommand([=]() {
 		goal_grabber_sol.set(value);
@@ -77,7 +91,7 @@ public:
 
 void skills() {
 	CommandController cc {
-		odom.SetPositionCmd({.x = 12, .y = 72, .rot = 0}),
+		odom.SetPositionCmd({.x = 12, .y = 96, .rot = 0}),
 
 		new Async(new FunctionCommand([]() {
 			while(true) {
@@ -87,51 +101,42 @@ void skills() {
 			return true;
 		})),
 
+		// First Ring
 		intake_command(),
-		drive_sys.DriveToPointCmd({30, 72}, vex::fwd, 0.6),
-		new DebugCommand(),
-		// drive_sys.PurePursuitCmd(PurePursuit::Path({
-		// 	{30, 72},
-		// 	{58, 30},
-		// }, 2), vex::forward, 0.6),
-		stop_intake(),
-		drive_sys.TurnToPointCmd(48, 24, vex::reverse),
-		drive_sys.DriveToPointCmd({48, 24}, vex::reverse),
+		drive_sys.DriveToPointCmd({48, 96}, vex::forward, .6) -> withTimeout(2),
+
+		// First Stake
+		drive_sys.TurnToHeadingCmd(-90, .6) -> withTimeout(2),
+		drive_sys.DriveToPointCmd({48, 120}, vex::reverse, .6) -> withTimeout(2),
+		conveyor_intake_command(),
 		goal_grabber_command(true),
-		intake_command(),
-		drive_sys.PurePursuitCmd(PurePursuit::Path({
-			{74, 18},
-			{72, 12},
-		}, 2), vex::forward),
-		drive_sys.PurePursuitCmd(PurePursuit::Path({
-			{76, 20},
-		}, 2), vex::reverse),
-		drive_sys.PurePursuitCmd(PurePursuit::Path({
-			{24, 24},
-			{0, 0},
-		}, 2), vex::forward),
-		drive_sys.TurnDegreesCmd(180),
+
+		// Second Ring
+		drive_sys.TurnToPointCmd(72, 120, vex::directionType::fwd, .6) -> withTimeout(2),
+		drive_sys.DriveToPointCmd({72, 120}, vex::forward, .6) -> withTimeout(2),
+
+		// Third Ring
+		drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(2),
+		drive_sys.DriveToPointCmd({72, 128}, vex::forward, .6) -> withTimeout(2),
+
+		// Fourth Ring
+		drive_sys.TurnToPointCmd(24, 120, vex::directionType::fwd, .6) -> withTimeout(2),
+		drive_sys.DriveToPointCmd({24, 120}, vex::forward, .6) -> withTimeout(2),
+
+		// Fifth Ring
+		drive_sys.TurnToPointCmd(0, 144, vex::directionType::fwd, .6) -> withTimeout(2),
+		drive_sys.DriveToPointCmd({8, 136}, vex::forward, .6) -> withTimeout(2),
+
+		// Deposit First Stake
+		drive_sys.DriveForwardCmd(8, vex::directionType::rev, .6) -> withTimeout(2),
+		// drive_sys.TurnToPointCmd(96, 120, vex::directionType::fwd, .6) -> withTimeout(3),
+		drive_sys.TurnToHeadingCmd(-45, .6) -> withTimeout(2),
+		new FunctionCommand([=]() {
+			vexDelay(700);
+			return true;
+		}),
 		goal_grabber_command(false),
-		drive_sys.PurePursuitCmd(PurePursuit::Path({
-			{96, 24},
-			{120, 24},
-		}, 2), vex::forward),
-		stop_intake(),
-		drive_sys.TurnToPointCmd(96, 48, vex::reverse),
-		drive_sys.DriveToPointCmd({96, 48}, vex::reverse),
-		goal_grabber_command(true),
-		intake_command(),
-		drive_sys.PurePursuitCmd(PurePursuit::Path({
-			{96, 48},
-			{90, 50},
-		}, 2), vex::reverse),
-		drive_sys.PurePursuitCmd(PurePursuit::Path({
-			{120, 48},
-			{134, 36},
-			{144, 0},
-		}, 2), vex::forward),
-		drive_sys.TurnDegreesCmd(180),
-		goal_grabber_command(false),
+		odom.SetPositionCmd({.x = 23, .y = 129, .rot = -45}),
 	};
 	cc.run();
 }

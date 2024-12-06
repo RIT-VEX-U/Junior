@@ -34,6 +34,8 @@ void intake(double volts);
 void intake();
 void outtake(double volts);
 void outtake();
+void conveyor_intake(double volts);
+void conveyor_intake();
 
 extern vex::motor_group left_motors;
 extern vex::motor_group right_motors;
@@ -49,8 +51,8 @@ extern PID::pid_config_t drive_correction_pid;
 
 extern robot_specs_t robot_cfg;
 
-extern OdometryNWheel<3> odom;
-// extern OdometryTank odom;
+// extern OdometryNWheel<3> odom;
+extern OdometryTank odom;
 extern TankDrive drive_sys;
 
 /**

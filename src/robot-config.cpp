@@ -12,9 +12,9 @@ CustomEncoder left_enc{Brain.ThreeWirePort.C, 2048};
 CustomEncoder right_enc{Brain.ThreeWirePort.E, 2048};
 CustomEncoder front_enc{Brain.ThreeWirePort.G, 2048};
 
-tracking_wheel_cfg_t left_enc_cfg{-0.0625, 3.625, M_PI, 1.0625};
-tracking_wheel_cfg_t right_enc_cfg{-0.0625, -3.625, 0, 1.0625};
-tracking_wheel_cfg_t front_enc_cfg{4.5, -0.375, (M_PI/2), 1.0625};
+tracking_wheel_cfg_t left_enc_cfg{-0.0625, 3.625, M_PI, 0.9};
+tracking_wheel_cfg_t right_enc_cfg{-0.0625, -3.625, 0, 0.9};
+tracking_wheel_cfg_t front_enc_cfg{4.5, -0.375, (M_PI/2), 0.9};
 
 // ================ OUTPUTS ================
 // Motors
@@ -54,6 +54,14 @@ void outtake() {
     intake_ramp.spin(vex::directionType::rev, intake_volts, vex::volt);
 }
 
+void conveyor_intake(double volts) {
+    conveyor.spin(vex::directionType::fwd, volts, vex::volt);
+}
+
+void conveyor_intake() {
+    conveyor.spin(vex::directionType::fwd, intake_volts, vex::volt);
+}
+
 vex::motor_group left_motors{left_front_top, left_front_bottom, left_back_top, left_back_bottom};
 vex::motor_group right_motors{right_front_top, right_front_bottom, right_back_top, right_back_bottom};
 // Pneumatics
@@ -76,7 +84,8 @@ PID::pid_config_t turn_pid_cfg{
     .p = 0.01625,
     .i = 0.005,
     .d = 0.001,
-    .deadband = 1.5,
+    //.deadband = 1.5,
+    .deadband = 3,
     .on_target_time = 0.1,
 };
 
@@ -96,8 +105,8 @@ robot_specs_t robot_cfg{
     .correction_pid = drive_correction_pid,
 };
 
-OdometryNWheel<3> odom({left_enc, right_enc, front_enc}, {left_enc_cfg, right_enc_cfg, front_enc_cfg}, &imu, true);
-// OdometryTank odom(left_enc, right_enc, robot_cfg, &imu);
+// OdometryNWheel<3> odom({left_enc, right_enc, front_enc}, {left_enc_cfg, right_enc_cfg, front_enc_cfg}, &imu, true);
+OdometryTank odom(left_enc, right_enc, robot_cfg, &imu);
 TankDrive drive_sys(left_motors, right_motors, robot_cfg, &odom);
 
 /**
