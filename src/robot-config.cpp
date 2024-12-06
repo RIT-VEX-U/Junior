@@ -30,7 +30,7 @@ vex::motor right_back_bottom(vex::PORT4, vex::gearSetting::ratio6_1, false);
 
 vex::motor intake_roller(vex::PORT19, vex::gearSetting::ratio6_1, false);
 vex::motor intake_ramp(vex::PORT20, vex::gearSetting::ratio6_1, false);
-vex::motor conveyor(vex::PORT9, vex::gearSetting::ratio6_1, false);
+vex::motor conveyor(vex::PORT9, vex::gearSetting::ratio18_1, true);
 
 const double intake_volts = 12.0;
 

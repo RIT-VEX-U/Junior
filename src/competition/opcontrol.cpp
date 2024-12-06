@@ -1,4 +1,5 @@
 #include "competition/opcontrol.h"
+#include "competition/autonomous.h"
 #include "vex.h"
 #include "robot-config.h"
 
@@ -15,7 +16,7 @@ void testing();
 */
 void opcontrol()
 {
-    testing();
+    autonomous();
     // ================ INIT ================
     while (imu.isCalibrating()) {
         vexDelay(1);
@@ -48,6 +49,14 @@ void opcontrol()
     });
 
     while (true) {
+        // if (conveyor_optical.isNearObject()) {
+        //     if (conveyor_optical.color() == vex::color::red) {
+        //         con.Screen.print("red detected");
+        //     } else {
+        //         con.Screen.clearScreen();
+        //     }
+        // }
+
         if(!intake_button.pressing() && !outtake_button.pressing() && !conveyor_button.pressing()) {
             intake_roller.stop();
             intake_ramp.stop();
@@ -107,14 +116,14 @@ void testing() {
             //     drive_sys.DriveForwardCmd(24.0, vex::fwd, 0.6)->withTimeout(12),
             //     new DelayCommand(500),
             // }, new TimesTestedCondition(4)),
-            drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
+            drive_sys.DriveForwardCmd(48.0, vex::fwd, 0.8)->withTimeout(3),
             drive_sys.TurnToHeadingCmd(90.0, 0.7)->withTimeout(3),
-            drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
-            drive_sys.TurnToHeadingCmd(180.0, 0.7)->withTimeout(3),
-            drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
-            drive_sys.TurnToHeadingCmd(270.0, 0.7)->withTimeout(3),
-            drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
-            drive_sys.TurnToHeadingCmd(0.0, 0.7)->withTimeout(3),
+            // drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
+            // drive_sys.TurnToHeadingCmd(180.0, 0.7)->withTimeout(3),
+            // drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
+            // drive_sys.TurnToHeadingCmd(270.0, 0.7)->withTimeout(3),
+            // drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
+            // drive_sys.TurnToHeadingCmd(0.0, 0.7)->withTimeout(3),
 
             // drive_sys.TurnToHeadingCmd(90, 0.6)->withTimeout(5),
             // new DelayCommand(500),
@@ -132,7 +141,8 @@ void testing() {
 
     while (true) {
         if (conveyor_optical.isNearObject()) {
-           con.Screen.print(conveyor_optical.color());
+            if (conveyor_optical.color() == vex::color::red)
+                con.Screen.print("red detected");
         }
         vexDelay(1);
     }
