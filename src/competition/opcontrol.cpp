@@ -16,7 +16,8 @@ void testing();
 */
 void opcontrol()
 {
-    autonomous();
+    // autonomous();
+    testing();
     // ================ INIT ================
     while (imu.isCalibrating()) {
         vexDelay(1);
@@ -116,8 +117,8 @@ void testing() {
             //     drive_sys.DriveForwardCmd(24.0, vex::fwd, 0.6)->withTimeout(12),
             //     new DelayCommand(500),
             // }, new TimesTestedCondition(4)),
-            drive_sys.DriveForwardCmd(48.0, vex::fwd, 0.8)->withTimeout(3),
-            drive_sys.TurnToHeadingCmd(90.0, 0.7)->withTimeout(3),
+            // drive_sys.DriveForwardCmd(48.0, vex::fwd, 0.8)->withTimeout(3),
+            // drive_sys.TurnToHeadingCmd(90.0, 0.7)->withTimeout(3),
             // drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
             // drive_sys.TurnToHeadingCmd(180.0, 0.7)->withTimeout(3),
             // drive_sys.DriveForwardCmd(96.0, vex::fwd, 0.8)->withTimeout(3),
