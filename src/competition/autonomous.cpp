@@ -36,10 +36,23 @@ AutoCommand *stop_intake() {
 		return true;
 	});
 }
+class ConveyorStalled : public Condition{
+	bool test() override{
+		return conveyor.current() > 1.5;
+	}
+};
 
 AutoCommand *conveyor_intake_command(double amt = 12.0) {
 	return new FunctionCommand([=]() {
 		conveyor_intake(amt);
+		while(conveyor.current() > 1.5){
+			printf("stalls");
+			conveyor_intake(amt * -1);
+		}
+	//waitUntil(conveyor.voltage, => 10);
+	//	conveyor_intake(-10);
+	//	wait(.3,sec);
+	//	conveyor_intake(amt);
 		return true;
 	});
 }
@@ -91,7 +104,7 @@ public:
 
 void skills() {
 	CommandController cc {
-		odom.SetPositionCmd({.x = 12, .y = 96, .rot = 0}),
+		odom.SetPositionCmd({.x = 14, .y = 96, .rot = 0}),
 
 		new Async(new FunctionCommand([]() {
 			while(true) {
@@ -100,43 +113,126 @@ void skills() {
 			}
 			return true;
 		})),
+	// drive_sys.DriveForwardCmd(48, vex::forward, 0.6, 0)
+	// First Ring
+	conveyor_intake_command(-12),
+	intake_command(),
+	drive_sys.DriveToPointCmd({48, 96}, vex::forward, .6) -> withTimeout(2),
+	conveyor_stop_command(),
 
-		// First Ring
-		intake_command(),
-		drive_sys.DriveToPointCmd({48, 96}, vex::forward, .6) -> withTimeout(2),
+	// First Stake
+	drive_sys.TurnToHeadingCmd(-90, .6) -> withTimeout(2),
+	drive_sys.DriveToPointCmd({48, 120}, vex::reverse, .6) -> withTimeout(2),
+	conveyor_intake_command()->withCancelCondition(new ConveyorStalled),
+	goal_grabber_command(true),
 
-		// First Stake
-		drive_sys.TurnToHeadingCmd(-90, .6) -> withTimeout(2),
-		drive_sys.DriveToPointCmd({48, 120}, vex::reverse, .6) -> withTimeout(2),
-		conveyor_intake_command(),
-		goal_grabber_command(true),
+	// Second Ring
+	drive_sys.TurnToPointCmd(72, 120, vex::directionType::fwd, .6) -> withTimeout(.7),
+	drive_sys.DriveToPointCmd({72, 120}, vex::forward, .8) -> withTimeout(.5),
 
-		// Second Ring
-		drive_sys.TurnToPointCmd(72, 120, vex::directionType::fwd, .6) -> withTimeout(2),
-		drive_sys.DriveToPointCmd({72, 120}, vex::forward, .6) -> withTimeout(2),
+	// Third Ring
+	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(2),
+	//drive_sys.TurnToPointCmd(72, 128, vex::directionType::fwd, .6) -> withTimeout(.7),
+	drive_sys.DriveToPointCmd({72, 128}, vex::forward, .6) -> withTimeout(1),
 
-		// Third Ring
-		drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(2),
-		drive_sys.DriveToPointCmd({72, 128}, vex::forward, .6) -> withTimeout(2),
+	// Fourth Ring
+	drive_sys.TurnToPointCmd(24, 120, vex::directionType::fwd, .6) -> withTimeout(1),
+	drive_sys.DriveToPointCmd({24, 120}, vex::forward, .8) -> withTimeout(1),
 
-		// Fourth Ring
-		drive_sys.TurnToPointCmd(24, 120, vex::directionType::fwd, .6) -> withTimeout(2),
-		drive_sys.DriveToPointCmd({24, 120}, vex::forward, .6) -> withTimeout(2),
+	// Fifth Ring
+	drive_sys.TurnToPointCmd(0, 144, vex::directionType::fwd, .6) -> withTimeout(1),
+	drive_sys.DriveToPointCmd({10, 134}, vex::forward, .8) -> withTimeout(1),
+		
+	// Deposit First Stake
+	drive_sys.DriveForwardCmd(8, vex::directionType::rev, .6) -> withTimeout(.7),
+	// drive_sys.TurnToPointCmd(96, 120, vex::directionType::fwd, .6) -> withTimeout(3),
+	drive_sys.TurnToHeadingCmd(-45, .6) -> withTimeout(.5),
+	conveyor_stop_command(),
 
-		// Fifth Ring
-		drive_sys.TurnToPointCmd(0, 144, vex::directionType::fwd, .6) -> withTimeout(2),
-		drive_sys.DriveToPointCmd({8, 136}, vex::forward, .6) -> withTimeout(2),
+	//drop goal/move away
+	goal_grabber_command(false),
+	drive_sys.DriveForwardCmd(4, vex::directionType::rev, .8) -> withTimeout(.3),
+	drive_sys.DriveToPointCmd({24, 120}, vex::forward, .8) -> withTimeout(.6),
 
-		// Deposit First Stake
-		drive_sys.DriveForwardCmd(8, vex::directionType::rev, .6) -> withTimeout(2),
-		// drive_sys.TurnToPointCmd(96, 120, vex::directionType::fwd, .6) -> withTimeout(3),
-		drive_sys.TurnToHeadingCmd(-45, .6) -> withTimeout(2),
-		new FunctionCommand([=]() {
-			vexDelay(700);
-			return true;
-		}),
-		goal_grabber_command(false),
-		odom.SetPositionCmd({.x = 23, .y = 129, .rot = -45}),
+		
+ 	//first ring second goal
+ 	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1),
+ 	drive_sys.DriveForwardCmd(72, vex::directionType::fwd, .6) -> withTimeout(2.5),
+
+ 	//grab second goal
+ 	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(1),
+ 	drive_sys.DriveForwardCmd(24,vex::directionType::rev,.6)-> withTimeout(1),
+ 	goal_grabber_command(true),
+ 	conveyor_intake_command()->withCancelCondition(new ConveyorStalled),
+
+ 	//second ring#2
+ 	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1),
+ 	drive_sys.DriveForwardCmd(24,vex::directionType::fwd,.6)-> withTimeout(1),
+		
+ 	//third ring#2
+ 	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(1),
+ 	drive_sys.DriveForwardCmd(18,vex::directionType::fwd,.6)-> withTimeout(1),
+		
+ 	//corner
+ 	drive_sys.TurnToHeadingCmd(45, .6) -> withTimeout(1),
+ 	drive_sys.DriveForwardCmd(18,vex::directionType::fwd,.6)-> withTimeout(1),
+ 	conveyor_stop_command(),
+
+ 	//spit out blue
+ 	drive_sys.DriveForwardCmd(12,vex::directionType::rev,.6)-> withTimeout(1),
+ 	drive_sys.TurnToHeadingCmd(135, .6) -> withTimeout(1),
+ 	outtake_command(12),
+ 	drive_sys.DriveForwardCmd(10,vex::directionType::fwd,1)-> withTimeout(.3),
+ 	drive_sys.DriveForwardCmd(8,vex::directionType::rev,.8)-> withTimeout(1),
+
+ 	//4th ring
+ 	drive_sys.TurnToPointCmd(144, 144, vex::directionType::fwd, .6) -> withTimeout(1),
+ 	intake_command(),
+ 	drive_sys.DriveToPointCmd({134, 134}, vex::forward, .8) -> withTimeout(1),
+
+ 	//drop goal in corner
+ 	drive_sys.DriveForwardCmd(4,vex::directionType::rev,.8)-> withTimeout(1),
+ 	drive_sys.TurnToHeadingCmd(-135, .6) -> withTimeout(1),
+ 	goal_grabber_command(false),
+ 	drive_sys.DriveForwardCmd(4,vex::directionType::fwd,.8)-> withTimeout(1),
+ 	goal_grabber_command(true),
+ 	drive_sys.DriveForwardCmd(12,vex::directionType::rev,.6)-> withTimeout(1),
+
+
+ 	//drive away from goal
+ 	drive_sys.TurnToPointCmd(120, 120, vex::directionType::fwd, .6) -> withTimeout(1),
+ 	drive_sys.DriveToPointCmd({120, 120}, vex::forward, .8) -> withTimeout(1),
+ 	goal_grabber_command(false),
+		
+ 	//grab third goal
+ 	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(1),
+ 	drive_sys.DriveToPointCmd({120, 70}, vex::forward, .8) -> withTimeout(1.4),
+ 	goal_grabber_command(true),
+
+ 	//first ring#3
+ 	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1.5),
+ 	intake_command(),
+ 	conveyor_intake_command(),
+ 	drive_sys.DriveForwardCmd(10,vex::directionType::fwd,.6)-> withTimeout(1.5),
+
+
+
+		
+	 	new FunctionCommand([=]() {
+	 		vexDelay(700);
+	 		return true;
+	 	}),
+	 	goal_grabber_command(false),
+	 	odom.SetPositionCmd({.x = 23, .y = 129, .rot = -45}),
 	};
-	cc.run();
+	 cc.run();
+
+	 while(true){
+		if(new ConveyorStalled){
+			printf("Conveyor Stalled");
+			conveyor_intake(-12);
+			vexDelay(500);
+			conveyor_intake(12);
+		}
+	 }
 }

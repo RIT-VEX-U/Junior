@@ -56,6 +56,7 @@ void outtake() {
 
 void conveyor_intake(double volts) {
     conveyor.spin(vex::directionType::fwd, volts, vex::volt);
+
 }
 
 void conveyor_intake() {
