@@ -104,7 +104,7 @@ public:
 
 void skills() {
 	CommandController cc {
-		odom.SetPositionCmd({.x = 14, .y = 96, .rot = 0}),
+		odom.SetPositionCmd({.x = 12, .y = 96, .rot = 0}),
 
 		new Async(new FunctionCommand([]() {
 			while(true) {
@@ -141,7 +141,7 @@ void skills() {
 
 	// Fifth Ring
 	drive_sys.TurnToPointCmd(0, 144, vex::directionType::fwd, .6) -> withTimeout(1),
-	drive_sys.DriveToPointCmd({10, 134}, vex::forward, .8) -> withTimeout(1),
+	drive_sys.DriveToPointCmd({6, 138}, vex::forward, .8) -> withTimeout(1),
 		
 	// Deposit First Stake
 	drive_sys.DriveForwardCmd(8, vex::directionType::rev, .6) -> withTimeout(.7),
@@ -156,8 +156,8 @@ void skills() {
 
 		
  	//first ring second goal
- 	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1),
- 	drive_sys.DriveForwardCmd(72, vex::directionType::fwd, .6) -> withTimeout(2.5),
+ 	drive_sys.TurnToPointCmd(96, 120, vex::forward, .6) -> withTimeout(1),
+ 	drive_sys.DriveToPointCmd({96, 120}, vex::forward, .6) -> withTimeout(2.5),
 
  	//grab second goal
  	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(1),
