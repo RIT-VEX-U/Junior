@@ -16,8 +16,7 @@ void testing();
 */
 void opcontrol()
 {
-    // autonomous();
-    testing();
+    //testing();
     // ================ INIT ================
     while (imu.isCalibrating()) {
         vexDelay(1);
