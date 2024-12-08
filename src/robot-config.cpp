@@ -32,6 +32,13 @@ vex::motor intake_roller(vex::PORT19, vex::gearSetting::ratio6_1, false);
 vex::motor intake_ramp(vex::PORT20, vex::gearSetting::ratio6_1, false);
 vex::motor conveyor(vex::PORT9, vex::gearSetting::ratio18_1, true);
 
+std::map<std::string, vex::motor &> motor_names{
+  {"left front top", left_front_top},   {"left front bottom", left_front_bottom},   {"left back top", left_back_top},   {"left back bottom", left_back_bottom},
+
+  {"right front top", right_front_top},   {"right front bottom", right_front_bottom},   {"right back top", right_back_top},   {"right back bottom", right_back_bottom},
+
+};
+
 const double intake_volts = 12.0;
 
 void intake(double volts) {
@@ -117,13 +124,14 @@ void robot_init()
 {
     imu.startCalibration();
 
-    conveyor_optical.setLight(vex::ledState::on);
-    conveyor_optical.setLightPower(100, vex::percent);
+    //conveyor_optical.setLight(vex::ledState::on);
+    //conveyor_optical.setLightPower(100, vex::percent);
 
     screen::start_screen(
         Brain.Screen,
         {
-            new screen::PIDPage(drive_pid, "drive")
+            new screen::PIDPage(drive_pid, "drive"),
+            new screen::StatsPage(motor_names)
         },
         0
     );
