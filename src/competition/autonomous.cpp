@@ -124,7 +124,7 @@ void skills() {
 	conveyor_stop_command(),
 
 	// First Stake
-	drive_sys.TurnToHeadingCmd(-90, .6) -> withTimeout(2),
+	drive_sys.TurnToHeadingCmd(-90, .6) -> withTimeout(1.5),
 	drive_sys.DriveToPointCmd({48, 120}, vex::reverse, .6) -> withTimeout(1.5),
 	conveyor_intake_command()->withCancelCondition(new ConveyorStalled),
 	goal_grabber_command(true),
@@ -140,7 +140,7 @@ void skills() {
 
 	// Fourth Ring
 	drive_sys.TurnToPointCmd(24, 120, vex::directionType::fwd, .6) -> withTimeout(1),
-	drive_sys.DriveToPointCmd({24, 120}, vex::forward, .8) -> withTimeout(1),
+	drive_sys.DriveToPointCmd({24, 120}, vex::forward, .8) -> withTimeout(1.5),
 
 	// Fifth Ring
 	drive_sys.TurnToPointCmd(4, 144, vex::directionType::fwd, .6) -> withTimeout(1),
@@ -155,7 +155,7 @@ void skills() {
 	drive_sys.TurnToHeadingCmd(315, .5) -> withTimeout(1),
 	//drive_sys.DriveForwardCmd(15, vex::directionType::rev, .8) -> withTimeout(.3),
 	new DelayCommand(500),
-	drive_sys.DriveTankCmd(-.6,-.6) -> withTimeout(1),
+	drive_sys.DriveTankCmd(-.5,-.5) -> withTimeout(1),
 	//drive_sys.DriveForwardCmd(15, vex::directionType::rev, .6) -> withTimeout(.7),
 	conveyor_stop_command(),
 	
@@ -190,32 +190,47 @@ void skills() {
 	drive_sys.PurePursuitCmd(PurePursuit::Path({
 		{.x = 48, .y = 120},
 		{.x = 72, .y = 120},
-		{.x = 96, .y = 120},
+		{.x = 94, .y = 120},
 
-	}, 2), vex::fwd, 0.4) -> withTimeout(5),
+	}, 2), vex::fwd, 0.4) -> withTimeout(3.5),
 	//new DebugCommand(),
  	//grab second goal
- 	drive_sys.TurnToHeadingCmd(90, .3) -> withTimeout(1),
+ 	drive_sys.TurnToHeadingCmd(90, .3) -> withTimeout(2),
 	//drive_sys.TurnToHeadingCmd(90, .4) -> withTimeout(1),
- 	drive_sys.DriveToPointCmd({96, 96},vex::directionType::rev,.3)-> withTimeout(1),
+ 	drive_sys.DriveToPointCmd({96, 76},vex::directionType::rev,.3)-> withTimeout(1.5),
+	//new DebugCommand(),
 	new DelayCommand(1000),
  	goal_grabber_command(true),
 	
 	//new DebugCommand(),
  	conveyor_intake_command()->withCancelCondition(new ConveyorStalled()),
+	
+
+
+	//@Todo IF MESSED UP CHANGE NEXT 2 LINES!!!!!!!!!!
+
+
+
+
+	// drive_sys.DriveForwardCmd(6, vex::directionType::rev, .4) -> withTimeout(1),
+	// odom.SetPositionCmd({.x = 96, .y = 96, .rot = 90}),
 	//new DebugCommand(),
 
  	//second ring#2
- 	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1),
- 	drive_sys.DriveForwardCmd(24,vex::directionType::fwd,.6)-> withTimeout(1),
+ 	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1.5),
+ 	drive_sys.DriveForwardCmd(24,vex::directionType::fwd,.6)-> withTimeout(1.5),
 		
  	//third ring#2
- 	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(1),
- 	drive_sys.DriveForwardCmd(18,vex::directionType::fwd,.6)-> withTimeout(1),
+ 	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(2),
+ 	drive_sys.DriveForwardCmd(24,vex::directionType::fwd,.6)-> withTimeout(1),
+	
 		
  	//corner
  	drive_sys.TurnToHeadingCmd(45, .6) -> withTimeout(1),
- 	drive_sys.DriveForwardCmd(18,vex::directionType::fwd,.6)-> withTimeout(1),
+ 	
+	drive_sys.DriveTankCmd(.5,.5) -> withTimeout(1.5),
+	//odom.SetPositionCmd({.x = 135, .y = 133.5, .rot = M_PI/4}),
+	//drive_sys.DriveForwardCmd(18,vex::directionType::fwd,.6)-> withTimeout(1),
  	conveyor_stop_command(),
 
  	//spit out blue
@@ -232,31 +247,43 @@ void skills() {
 	drive_sys.DriveTankCmd(.6,.6) -> withTimeout(1),
 
  	//drop goal in corner
- 	drive_sys.DriveForwardCmd(4,vex::directionType::rev,.8)-> withTimeout(1),
+ 	drive_sys.DriveForwardCmd(4,vex::directionType::rev,.6)-> withTimeout(1),
  	drive_sys.TurnToHeadingCmd(-135, .6) -> withTimeout(1),
  	goal_grabber_command(false),
- 	drive_sys.DriveForwardCmd(4,vex::directionType::fwd,.8)-> withTimeout(1),
+	new DelayCommand(1500),
+ 	drive_sys.DriveForwardCmd(8,vex::directionType::fwd,.6)-> withTimeout(1),
+	new DelayCommand(1500),
+	
  	goal_grabber_command(true),
+	new DelayCommand(1500),
  	drive_sys.DriveForwardCmd(12,vex::directionType::rev,.6)-> withTimeout(1),
+
+	new DelayCommand(1500),
+ 	drive_sys.DriveForwardCmd(24,vex::directionType::fwd,.6)-> withTimeout(1),
 
 	new DebugCommand(),
 
 
  	//drive away from goal
  	drive_sys.TurnToPointCmd(120, 120, vex::directionType::fwd, .6) -> withTimeout(1),
- 	drive_sys.DriveToPointCmd({120, 120}, vex::forward, .8) -> withTimeout(1),
+ 	drive_sys.DriveToPointCmd({120, 120}, vex::forward, .6) -> withTimeout(1),
  	goal_grabber_command(false),
+
+	//new DebugCommand(),
 		
  	//grab third goal
  	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(1),
- 	drive_sys.DriveToPointCmd({120, 70}, vex::forward, .8) -> withTimeout(1.4),
+ 	drive_sys.DriveToPointCmd({120, 70}, vex::forward, .5) -> withTimeout(1.4),
  	goal_grabber_command(true),
+
+	new DebugCommand(),
 
  	//first ring#3
  	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1.5),
  	intake_command(),
  	conveyor_intake_command(),
  	drive_sys.DriveForwardCmd(10,vex::directionType::fwd,.6)-> withTimeout(1.5),
+
 
 
 
