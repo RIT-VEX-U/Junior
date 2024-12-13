@@ -159,8 +159,6 @@ void skills() {
 	//drive_sys.DriveForwardCmd(15, vex::directionType::rev, .6) -> withTimeout(.7),
 	conveyor_stop_command(),
 	
-	
-
 	//drop goal/move away
 	goal_grabber_command(false),
 	
@@ -168,10 +166,24 @@ void skills() {
 	
 	new DelayCommand(1500),
 	//new DebugCommand(),
+
 	odom.SetPositionCmd({.x= 13,  .y = 135, .rot = 7*M_PI/4}),
-	//drive_sys.DriveForwardCmd(5, vex::directionType::fwd, .6) -> withTimeout(.5),
-	//drive_sys.DriveToPointCmd({24, 120}, vex::forward, .8) -> withTimeout(.6),
+
+	// reset position with two wall aligns
 	drive_sys.DriveToPointCmd({26, 122}, vex::forward, .8) -> withTimeout(1),
+	drive_sys.TurnToHeadingCmd(0, 0.6)->withTimeout(1),
+	drive_sys.DriveForwardCmd(28, vex::reverse, 0.4)->withTimeout(2),
+	odom.SetPositionCmd({.x = 8, .y = odom.get_position().y, 0}),
+	drive_sys.DriveForwardCmd(24, vex::forward, 0.4)->withTimeout(2),
+	drive_sys.TurnToHeadingCmd(-90, 0.4)->withTimeout(2),
+	drive_sys.DriveForwardCmd(28, vex::reverse, 0.4)->withTimeout(2),
+	odom.SetPositionCmd({.x = odom.get_position().x, .y = (144 - 8), rot = ((2 * M_PI) / 2)}),
+
+	drive_sys.DriveToPointCmd({odom.get_position().x, 120}, vex::forward, 0.6)->withTimeout(1),
+	
+
+
+	
 	//new DebugCommand(),
 	 
 
