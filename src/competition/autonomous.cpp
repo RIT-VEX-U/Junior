@@ -180,7 +180,7 @@ void skills() {
 	odom.SetPositionCmd({.x = odom.get_position().x, .y = (144 - 8), rot = ((2 * M_PI) / 2)}),
 
 	drive_sys.DriveToPointCmd({odom.get_position().x, 120}, vex::forward, 0.6)->withTimeout(1),
-	
+
 
 
 	
@@ -230,11 +230,12 @@ void skills() {
 
  	//second ring#2
  	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1.5),
- 	drive_sys.DriveForwardCmd(24,vex::directionType::fwd,.6)-> withTimeout(1.5),
+	drive_sys.DriveToPointCmd({120, 96}, vex::forward, 0.6)->withTimeout(1),
+
 		
  	//third ring#2
  	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(2),
- 	drive_sys.DriveForwardCmd(24,vex::directionType::fwd,.6)-> withTimeout(1),
+ 	drive_sys.DriveToPointCmd({120, 120}, vex::forward, 0.6)->withTimeout(1),
 	
 		
  	//corner
@@ -285,16 +286,31 @@ void skills() {
 		
  	//grab third goal
  	drive_sys.TurnToHeadingCmd(90, .6) -> withTimeout(1),
- 	drive_sys.DriveToPointCmd({120, 70}, vex::forward, .5) -> withTimeout(1.4),
+ 	drive_sys.DriveToPointCmd({120, 72}, vex::reverse, .6) -> withTimeout(1.4),
  	goal_grabber_command(true),
 
-	new DebugCommand(),
-
  	//first ring#3
- 	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1.5),
- 	intake_command(),
+	intake_command(),
  	conveyor_intake_command(),
- 	drive_sys.DriveForwardCmd(10,vex::directionType::fwd,.6)-> withTimeout(1.5),
+ 	drive_sys.TurnToHeadingCmd(0, .6) -> withTimeout(1.5),
+ 	drive_sys.DriveForwardCmd(10,vex::directionType::fwd,.4)->withTimeout(1),
+	drive_sys.DriveForwardCmd(10, vex::reverse, 0.4)->withTimeout(1),
+
+	// gotta go under the ladder
+	drive_sys.TurnToPointCmd(96, 96, vex::forward, 0.6)->withTimeout(1),
+	drive_sys.DriveToPointCmd({96, 96}, vex::forward, 0.6)->withTimeout(1),
+	drive_sys.TurnToHeadingCmd(-135, 0.6)->withTimeout(1),
+	// first ring
+	drive_sys.DriveForwardCmd(30, vex::forward, 0.6)->withTimeout(1),
+	// second ring
+	drive_sys.TurnToHeadingCmd(180, 0.4)->withTimeout(1),
+	drive_sys.DriveForwardCmd(10, vex::forward, 0.4)->withTimeout(1),
+	// third ring
+	drive_sys.TurnToHeadingCmd(-90, 0.4)->withTimeout(1),
+	drive_sys.DriveForwardCmd(10, vex::forward, 0.4)->withTimeout(1),
+	// fourth ring
+	drive_sys.TurnToHeadingCmd(0, 0.4)->withTimeout(1),
+	drive_sys.DriveForwardCmd(10, vex::forward, 0.4)->withTimeout(1),
 
 
 
