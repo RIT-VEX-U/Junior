@@ -18,19 +18,19 @@ tracking_wheel_cfg_t front_enc_cfg{4.5, -0.375, (M_PI/2), 1.0625};
 
 // ================ OUTPUTS ================
 // Motors
-vex::motor left_front_top(vex::PORT8, vex::gearSetting::ratio6_1, true);
-vex::motor left_front_bottom(vex::PORT6, vex::gearSetting::ratio6_1, true);
-vex::motor left_back_top(vex::PORT7, vex::gearSetting::ratio6_1, false);
-vex::motor left_back_bottom(vex::PORT5, vex::gearSetting::ratio6_1, true);
+vex::motor left_front_top(vex::PORT2, vex::gearSetting::ratio6_1, true);
+vex::motor left_front_bottom(vex::PORT3, vex::gearSetting::ratio6_1, true);
+vex::motor left_back_top(vex::PORT1, vex::gearSetting::ratio6_1, true);
+vex::motor left_back_bottom(vex::PORT4, vex::gearSetting::ratio6_1, true);
 
-vex::motor right_front_top(vex::PORT3, vex::gearSetting::ratio6_1, false);
-vex::motor right_front_bottom(vex::PORT2, vex::gearSetting::ratio6_1, false);
-vex::motor right_back_top(vex::PORT1, vex::gearSetting::ratio6_1, true);
-vex::motor right_back_bottom(vex::PORT4, vex::gearSetting::ratio6_1, false);
+vex::motor right_front_top(vex::PORT14, vex::gearSetting::ratio6_1, false);
+vex::motor right_front_bottom(vex::PORT13, vex::gearSetting::ratio6_1, false);
+vex::motor right_back_top(vex::PORT12, vex::gearSetting::ratio6_1, false);
+vex::motor right_back_bottom(vex::PORT11, vex::gearSetting::ratio6_1, false);
 
-vex::motor intake_roller(vex::PORT19, vex::gearSetting::ratio6_1, false);
-vex::motor intake_ramp(vex::PORT20, vex::gearSetting::ratio6_1, false);
-vex::motor conveyor(vex::PORT9, vex::gearSetting::ratio18_1, true);
+vex::motor intake_roller(vex::PORT19, vex::gearSetting::ratio6_1, true);
+vex::motor intake_ramp(vex::PORT21, vex::gearSetting::ratio6_1, false);
+vex::motor conveyor(vex::PORT20, vex::gearSetting::ratio18_1, true);
 
 std::map<std::string, vex::motor &> motor_names{
   {"left front top", left_front_top},   {"left front bottom", left_front_bottom},   {"left back top", left_back_top},   {"left back bottom", left_back_bottom},

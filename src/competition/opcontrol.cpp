@@ -5,10 +5,10 @@
 
 const vex::controller::button &intake_button = con.ButtonL1;
 const vex::controller::button &outtake_button = con.ButtonL2;
-const vex::controller::button &goal_grabber = con.ButtonRight;
+const vex::controller::button &goal_grabber = con.ButtonB;
 const vex::controller::button &ring_doinker = con.ButtonY;
-const vex::controller::button &conveyor_button = con.ButtonR2;
-const vex::controller::button &rev_conveyor_button = con.ButtonR1;
+const vex::controller::button &conveyor_button = con.ButtonR1;
+const vex::controller::button &rev_conveyor_button = con.ButtonR2;
 
 void testing();
 /**
@@ -38,6 +38,7 @@ void opcontrol()
 
     rev_conveyor_button.pressed([]() {
         conveyor.spin(vex::directionType::rev, 12, vex::volt);
+        intake_roller.spin(vex::directionType::rev, 12, vex::volt);
     });
 
     goal_grabber.pressed([]() {
@@ -66,10 +67,10 @@ void opcontrol()
             conveyor.stop();
         }
 
-        double straight = (double)con.Axis3.position() / 100;
-        double turn = (double)con.Axis1.position() / 100;
+        double left = (double)con.Axis3.position() / 100;
+        double right = (double)con.Axis2.position() / 100;
 
-        drive_sys.drive_arcade(straight, turn * 0.75, 1, TankDrive::BrakeType::None);
+        drive_sys.drive_tank(left, right, 1, TankDrive::BrakeType::None);
 
         vexDelay(10);
     }
