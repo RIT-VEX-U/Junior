@@ -51,7 +51,7 @@ void opcontrol()
 
     while (true) {
         // if (conveyor_optical.isNearObject()) {
-        //     if (conveyor_optical.color() == vex::color::red) {
+        //     if (conveyor_optical.color() == vex::color::red) {bool should_brake = (bt != BrakeType::None) && fabs(left) < brake_threshold && fabs(right) < brake_threshold;
         //         con.Screen.print("red detected");
         //     } else {
         //         con.Screen.clearScreen();
