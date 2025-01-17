@@ -16,7 +16,9 @@ void testing();
 */
 void opcontrol()
 {
-    //testing();
+    printf("Op controol");
+    odom.set_position({.x = 0, .y = 0,.rot =0});
+    // skills();
     // ================ INIT ================
     while (imu.isCalibrating()) {
         vexDelay(1);
@@ -32,6 +34,7 @@ void opcontrol()
     });
 
     conveyor_button.pressed([]() {
+        printf("ODO X: %.2f, Y: %.2f, R:%.2f\n", odom.get_position().x, odom.get_position().y, odom.get_position().rot);
         conveyor.spin(vex::directionType::fwd, 12, vex::volt);
         intake();
     });
@@ -43,11 +46,16 @@ void opcontrol()
     goal_grabber.pressed([]() {
         goal_grabber_sol.set(!goal_grabber_sol);
     });
-
-    ring_doinker.pressed([]() {
-        ring_pusher_sol.set(!ring_pusher_sol);
+    con.ButtonX.pressed([]() {
+        printf("Button X Pressed: ODO X: %.2f, Y: %.2f, R:%.2f\n", odom.get_position().x, odom.get_position().y, odom.get_position().rot);
+        CommandController cc {
+            new OdomSetPosition(odom, {.x = 0,.y = 0,.rot = 0}),
+            new DriveForwardCommand(drive_sys, drive_pid, 24, vex::forward, 1.0, 0.0),
+        };
+        cc.run();
+        
     });
-
+    
     while (true) {
         // if (conveyor_optical.isNearObject()) {
         //     if (conveyor_optical.color() == vex::color::red) {
@@ -56,6 +64,8 @@ void opcontrol()
         //         con.Screen.clearScreen();
         //     }
         // }
+        // printf("ODO X: %.2f, Y: %.2f, R:%.2f\n", odom.get_position().x, odom.get_position().y, odom.get_position().rot);
+        // printf("ENC LEFT POS: %.2f, ENC RIGHT POS: %.2f\n", left_enc.position(vex::rotationUnits::deg), right_enc.position(vex::rotationUnits::deg));
 
         if(!intake_button.pressing() && !outtake_button.pressing() && !conveyor_button.pressing()) {
             intake_roller.stop();
@@ -86,7 +96,7 @@ void testing() {
             drive_sys.stop();
             pose_t pos = odom.get_position();
             printf("ODO X: %.2f, Y: %.2f, R:%.2f\n", pos.x, pos.y, pos.rot);
-            printf("ENC LEFT POS: %.2f, ENC RIGHT POS: %.2f, ENC BACK POS: %.2f\n", left_enc.position(vex::rotationUnits::deg), right_enc.position(vex::rotationUnits::deg), front_enc.position(vex::rotationUnits::deg));
+            printf("ENC LEFT POS: %.2f, ENC RIGHT POS: %.2f, ENC BACK POS: %.2f\n", left_enc.position(vex::rotationUnits::deg), right_enc.position(vex::rotationUnits::deg));
             while (true) {
                 double f = con.Axis3.position() / 200.0;
                 double s = con.Axis1.position() / 200.0;
